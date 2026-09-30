@@ -28,7 +28,7 @@ export default function TopNav() {
       </a>
       <div className="flex flex-1 items-center justify-between gap-3 sm:flex-none sm:justify-end sm:gap-5">
         <nav className="flex gap-3 sm:gap-5">
-          {sections.map(({ id }) => (
+          {sections.map(({ id, label }) => (
             <a
               key={id}
               href={`#${id}`}
@@ -37,7 +37,7 @@ export default function TopNav() {
                 active === id ? "text-primary-500" : ""
               }`}
             >
-              /{id}
+              /{label}
               <span
                 className={`absolute inset-x-0 bottom-0 h-0.5 origin-left bg-primary-500 transition-transform duration-300 ${
                   active === id ? "scale-x-100" : "scale-x-0"

@@ -1,8 +1,21 @@
+import Image from "next/image";
 import { AtSign, Github, Instagram, Linkedin } from "lucide-react";
+import ContributionGraph from "./components/ContributionGraph";
 import ProjectCard from "./components/ProjectCard";
 import Section from "./components/Section";
 import TopNav from "./components/TopNav";
-import { profile, projects, socials, stats, thoughts, uses, usesIntro } from "./content";
+import {
+  githubUsername,
+  profile,
+  projects,
+  socials,
+  uses,
+  usesIntro,
+} from "./content";
+import { getGithubStats } from "./lib/github";
+
+// Re-fetch the GitHub numbers at most once an hour.
+export const revalidate = 3600;
 
 const socialLinks = [
   { label: "linkedin", href: socials.linkedin, icon: Linkedin },
@@ -16,7 +29,22 @@ const skeleton = "animate-pulse rounded-md bg-gray-100 dark:bg-gray-900";
 // Staggers the reveal of list items inside a section.
 const delay = (i: number) => ({ transitionDelay: `${150 + i * 90}ms` });
 
-export default function Home() {
+export default async function Home() {
+  const github = await getGithubStats(githubUsername);
+
+  const overview = [
+    {
+      label: "Public repositories",
+      value: github?.publicRepos != null ? String(github.publicRepos) : "—",
+    },
+    {
+      label: "Contributions this year",
+      value: github?.days.length ? github.totalContributions.toLocaleString("en-US") : "—",
+    },
+    { label: "Projects completed", value: String(projects.length) },
+    { label: "Most used language", value: github?.topLanguage ?? "—" },
+  ];
+
   return (
     <>
       <TopNav />
@@ -63,6 +91,24 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          {/* Photo: floats on the right, outside the text flow, so it never squeezes the text.
+              Only shown on wide screens where there is free space next to the text. */}
+          <div
+            className="fade-in absolute right-12 top-[28%] hidden min-[1300px]:block 2xl:right-24"
+            style={{ animationDelay: "150ms" }}
+          >
+            <div className="photo-frame relative aspect-[4/5] w-56 2xl:w-64">
+              <Image
+                src={profile.photo}
+                alt={profile.name}
+                fill
+                priority
+                sizes="(min-width: 1536px) 256px, 224px"
+                className="object-cover object-top"
+              />
+            </div>
+          </div>
         </section>
 
         <div className="mx-auto w-full max-w-5xl border-x border-gray-200 dark:border-gray-300/20">
@@ -71,7 +117,7 @@ export default function Home() {
             <p className="reveal text-lg leading-7 text-gray-500 dark:text-gray-400">
               Here are some of my selected projects worth sharing.
             </p>
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((project, i) => (
                 <ProjectCard
                   key={project.slug}
@@ -83,39 +129,8 @@ export default function Home() {
             </div>
           </Section>
 
-          {/* THOUGHTS */}
-          <Section id="thoughts" title="Thoughts">
-            <p className="reveal text-lg leading-7 text-gray-500 dark:text-gray-400">
-              Notes on the things I&apos;m building and learning.
-            </p>
-            <div className="grid gap-6 md:grid-cols-3">
-              {thoughts.map((post, i) => (
-                <a
-                  key={post.title}
-                  href={post.href}
-                  aria-label={`Read "${post.title}"`}
-                  className="card reveal group flex flex-col gap-3"
-                  style={delay(i)}
-                >
-                  <time className="pill w-fit">{post.date}</time>
-                  <h3 className="font-serif text-xl font-bold group-hover:text-primary-500">
-                    {post.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">{post.summary}</p>
-                  <div className="mt-auto flex flex-wrap gap-1.5 pt-2">
-                    {post.tags.map((tag) => (
-                      <span key={tag} className="pill">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </a>
-              ))}
-            </div>
-          </Section>
-
-          {/* USES */}
-          <Section id="uses" title="Uses">
+          {/* SKILL */}
+          <Section id="skill" title="Skill">
             <p className="reveal text-lg leading-7 text-gray-500 dark:text-gray-400">
               {usesIntro}
             </p>
@@ -159,12 +174,16 @@ export default function Home() {
                 <h3 className="text-2xl font-extrabold leading-9 tracking-tight">Github</h3>
                 <p className="leading-4 text-gray-500 dark:text-gray-400">Contributions Stats</p>
               </div>
-              {/* Placeholder for the contribution graph — replace with real data later. */}
-              <div className="flex h-[152px] flex-col justify-between">
-                <div className={`${skeleton} h-4 w-full`} />
-                <div className={`${skeleton} h-[102px] w-full`} />
-                <div className={`${skeleton} h-4 w-36`} />
-              </div>
+              {github && github.days.length > 0 ? (
+                <ContributionGraph days={github.days} total={github.totalContributions} />
+              ) : (
+                // Shown only when GitHub couldn't be reached (rate limit / offline).
+                <div className="flex h-[152px] flex-col justify-between">
+                  <div className={`${skeleton} h-4 w-full`} />
+                  <div className={`${skeleton} h-[102px] w-full`} />
+                  <div className={`${skeleton} h-4 w-36`} />
+                </div>
+              )}
             </div>
 
             <div className="reveal mt-7 space-y-4" style={delay(1)}>
@@ -173,7 +192,7 @@ export default function Home() {
                 <p className="leading-4 text-gray-500 dark:text-gray-400">Coding Stats</p>
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {stats.map((stat) => (
+                {overview.map((stat) => (
                   <div
                     key={stat.label}
                     className="rounded-md border-b border-gray-200 px-3 py-2 dark:border-gray-800"
