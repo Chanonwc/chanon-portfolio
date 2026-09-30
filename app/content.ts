@@ -1,43 +1,53 @@
 // All content for the site lives here — edit this file to update the pages.
 
 import {
+  Bot,
+  Brain,
+  CircuitBoard,
   ClipboardCheck,
   Code,
   Cpu,
   Crosshair,
-  Fan,
+  Eye,
   FileUp,
   GraduationCap,
   type LucideIcon,
   MonitorSmartphone,
   Route,
+  Server,
   SlidersHorizontal,
   Smartphone,
   Target,
-  Users,
+  Zap,
 } from "lucide-react";
 
 export const profile = {
   name: "Chanon Wichai",
-  role: "an Electronic & Computer Engineering student",
+  role: "a Computer Engineering student",
   intro:
     "I enjoy turning ideas into practical projects across software, embedded systems, IoT and AI, and I learn new technologies by building things myself.",
   current: { label: "KMUTNB", href: "https://www.kmutnb.ac.th/" },
+  // Hero photo — the file lives in /public. Replace public/profile.jpg with your own picture.
+  photo: "/profile.jpg",
 };
 
 export const socials = {
   github: "https://github.com/Chanonwc",
   linkedin: "#",
   instagram: "#",
-  email: "mailto:your-email@example.com",
+  email: "mailto:wc.chanon@gmail.com",
 };
 
-// Sections of the single page, in order — also drives the top navigation.
+// GitHub username used by the Stats section.
+export const githubUsername = "Chanonwc";
+
+// Sections of the single page, in order — drives the top navigation.
+// `id` is the anchor on the page, `label` is the text shown in the nav.
 export const sections = [
-  { id: "projects", title: "Projects" },
-  { id: "thoughts", title: "Thoughts" },
-  { id: "uses", title: "Uses" },
-  { id: "stats", title: "Stats" },
+  { id: "home", label: "about" },
+  { id: "projects", label: "project" },
+  { id: "skill", label: "skill" },
+  { id: "stats", label: "stats" },
 ];
 
 export type Project = {
@@ -66,12 +76,12 @@ export const projects: Project[] = [
     slug: "3d-probecode",
     title: "3D-ProbeCode",
     icon: Crosshair,
-    tagline: "Capstone project · CNC / CMM probe path planner",
-    badges: ["Capstone", "Project Leader"],
-    role: "Project Leader",
-    date: "Apr – Sep 2026",
+    tagline: "Capstone project · CMM path planner",
+    badges: ["Capstone", "Lead Developer"],
+    role: "Lead Developer",
+    date: "2026 – Present",
     summary:
-      "A desktop tool that reads STEP/STP CAD models, detects holes automatically, plans a probing path for each hole and exports a ready-to-run GRBL G-code program for our self-built CNC probing machine.",
+      "A CMM (Coordinate Measuring Machine) path planner in Python that parses STEP files, detects holes automatically, plans a probing path for each hole and evaluates measurement accuracy.",
     bullets: [
       "Analytic hole extraction from STEP B-Rep (incl. counterbores)",
       "6-view depth map, 3D path preview and probe reach checks",
@@ -151,55 +161,125 @@ export const projects: Project[] = [
     slug: "e-pretest",
     title: "E-Pretest",
     icon: GraduationCap,
-    tagline: "AI pre-test platform for KMUTNB students",
-    badges: ["Project Manager"],
-    role: "Project Manager",
-    date: "Mar 2026",
+    tagline: "AI pre-test generator platform",
+    badges: ["Software Tester"],
+    role: "Software Tester",
+    date: "2025",
     summary:
-      "Led a 5-person team building a platform that turns lecture PDFs into multiple-choice pre-tests with an LLM, adapts difficulty to each student and runs a GAP analysis after every exam.",
+      "Designed UAT scenarios and conducted hands-on functional testing for an AI pre-test generator platform to ensure a seamless user experience.",
     bullets: [
-      "Planned the timeline and coordinated the team",
-      "Bayesian adaptive difficulty across 5 levels",
-      "KMUTNB-only Google OAuth sign-in",
+      "Designed UAT scenarios for the platform",
+      "Hands-on functional testing of the user flows",
+      "Platform built with React, DeepSeek LLM and Google OAuth",
     ],
-    stack: ["React 18", "Vite", "FastAPI", "PostgreSQL", "MongoDB"],
+    stack: ["React", "DeepSeek LLM", "Google OAuth", "UAT"],
   },
   {
-    slug: "stm32-smart-fan",
-    title: "STM32 Smart Fan",
-    icon: Fan,
-    tagline: "Temperature-controlled fan on a Blue Pill",
+    slug: "chatops-network-automation",
+    title: "AI-Driven ChatOps",
+    icon: Bot,
+    tagline: "Network automation bot · course project",
+    badges: ["Course Project"],
+    role: "Developer",
+    date: "2025",
+    summary:
+      "Developed an AI-driven ChatOps bot as a course project to automate Cisco network configurations via secure GlobalProtect VPN connections to university servers.",
+    bullets: [
+      "Automates Cisco network configuration from chat",
+      "Python with Netmiko and Google GenAI",
+      "Secure access through GlobalProtect VPN",
+    ],
+    stack: ["Python", "Netmiko", "Google GenAI", "Cisco", "GlobalProtect VPN"],
+  },
+  {
+    slug: "dotnet-backend-api",
+    title: ".NET Backend & API",
+    icon: Server,
+    tagline: "Technical workshop by Tokio Marine",
+    badges: ["Workshop"],
+    role: "Participant",
+    date: "2025",
+    summary:
+      "Took part in a technical workshop by Tokio Marine covering backend development across 3 specialised sessions, testing endpoints and validating inputs to keep APIs secure.",
+    bullets: [
+      "RESTful API design",
+      "JWT authentication and CORS configuration",
+      "Tested endpoints with Postman and Swagger",
+    ],
+    stack: [".NET", "REST API", "JWT", "CORS", "Postman", "Swagger"],
+  },
+  {
+    slug: "image-classification-cnn",
+    title: "Image Classification Model",
+    icon: Brain,
+    tagline: "CNN in MATLAB · coursework project",
+    badges: ["Coursework"],
+    role: "Developer",
+    date: "2025",
+    summary:
+      "Developed and trained a Convolutional Neural Network in MATLAB to classify 10 distinct object classes, reaching a validation accuracy of 90.61%.",
+    bullets: [
+      "Classifies 10 object classes",
+      "Trained and validated a CNN in MATLAB",
+      "90.61% validation accuracy",
+    ],
+    stack: ["MATLAB", "CNN"],
+  },
+  {
+    slug: "i2c-io-expander",
+    title: "I2C I/O Expander Board",
+    icon: CircuitBoard,
+    tagline: "Custom PCB with the PCF8574",
+    badges: ["Hardware"],
+    role: "Designer",
+    date: "2025",
+    summary:
+      "Designed and prototyped a custom PCB using the PCF8574 IC for I2C-based I/O expansion, interfacing digital inputs and outputs.",
+    bullets: [
+      "Custom PCB design and prototype",
+      "I2C-based I/O expansion with the PCF8574",
+      "Interfaces digital inputs and outputs",
+    ],
+    stack: ["PCF8574", "I2C", "PCB design"],
+  },
+  {
+    slug: "flutter-mobile-app",
+    title: "Cross-Platform Mobile App",
+    icon: Smartphone,
+    tagline: "Flutter app with Firebase authentication",
     badges: ["Developer"],
     role: "Developer",
-    date: "Jul 2026",
+    date: "2025",
     summary:
-      "Reads temperature and humidity from a DHT22 every 2 seconds and drives a fan through a motor driver with PWM, mapping 35–50 °C to fan speed with smooth ramping instead of sudden jumps.",
+      "Built a cross-platform Flutter app and integrated Firebase to implement secure user authentication (login / sign-up) and manage user sessions across the application.",
     bullets: [
-      "Linear temperature → PWM speed curve",
-      "Soft ramp in steps of 5 for quiet transitions",
-      "Serial logging of humidity, temperature and fan PWM",
+      "Login and sign-up with Firebase Authentication",
+      "User sessions managed across the app",
+      "Cross-platform with Flutter",
     ],
-    stack: ["C / C++", "Arduino (STM32duino)", "STM32F103C8T6", "DHT22", "PWM"],
+    stack: ["Flutter", "Dart", "Firebase"],
   },
   {
-    slug: "otakubox",
-    title: "OtakuBox",
-    icon: Smartphone,
-    tagline: "Flutter anime browser (Mobile-GakGak)",
-    badges: ["Solo Developer"],
-    role: "Solo Developer",
-    date: "Dec 2025 – Feb 2026",
+    slug: "linear-dc-power-supply",
+    title: "Linear DC Power Supply",
+    icon: Zap,
+    tagline: "Hand-built, dual-rail ±12V and +5V",
+    badges: ["Hardware"],
+    role: "Builder",
+    date: "2024",
     summary:
-      "A Flutter mobile app for browsing anime, built for the Year 3 Mobile Application course, with a Firebase backend and Google Sign-In.",
+      "Assembled a fully functional linear DC power supply with adjustable dual-rail outputs (±12V) and a fixed +5V output, including hand-winding the main power transformer.",
     bullets: [
-      "Designed and built end to end, solo",
-      "Firebase Auth with Google Sign-In",
-      "Live anime data from the Jikan API",
+      "Adjustable dual-rail ±12V outputs",
+      "Fixed +5V output",
+      "Hand-wound main power transformer",
     ],
-    stack: ["Flutter", "Dart", "Firebase Auth", "Cloud Firestore", "Google Sign-In"],
+    stack: ["Analog electronics", "Power supply", "Transformer winding"],
   },
 ];
 
+// Not shown on the page right now (the Thoughts section was dropped from the design).
+// Kept here so it can be brought back later.
 export const thoughts = [
   {
     title: "Finding holes in a CAD model",
@@ -209,58 +289,51 @@ export const thoughts = [
     href: "#",
   },
   {
-    title: "Adaptive difficulty for pre-tests",
+    title: "Testing an AI pre-test platform",
     date: "Coming soon",
-    summary: "How E-Pretest picks the next question level for each student.",
-    tags: ["LLM", "FastAPI"],
+    summary: "Writing UAT scenarios and running functional tests for E-Pretest.",
+    tags: ["UAT", "React"],
     href: "#",
   },
   {
-    title: "Smooth fan control on a Blue Pill",
+    title: "Training a CNN in MATLAB",
     date: "Coming soon",
-    summary: "Mapping temperature to PWM and ramping the speed without sudden jumps.",
-    tags: ["STM32", "PWM"],
+    summary: "Classifying 10 object classes and reaching 90.61% validation accuracy.",
+    tags: ["MATLAB", "CNN"],
     href: "#",
   },
 ];
 
 export const usesIntro =
-  "From firmware on a Blue Pill to full-stack web apps: the tools I reach for when building things end to end.";
+  "From microcontroller boards to web apps and vision models: the tools I reach for when building things end to end.";
 
 export const uses = [
   {
     title: "Embedded & IoT",
     icon: Cpu,
     lead: "Hardware that reacts.",
-    text: "Microcontroller projects on STM32, ESP32 and Arduino: reading sensors, driving motors with PWM and wiring it all up on real boards.",
-    tags: ["STM32", "ESP32", "Arduino", "C / C++"],
+    text: "Microcontroller and hardware work on ESP32, Arduino and STM32, from a custom I2C I/O expander PCB to a hand-wound linear power supply.",
+    tags: ["ESP32", "Arduino", "STM32", "C / C++"],
   },
   {
     title: "Programming",
     icon: Code,
     lead: "The fundamentals.",
-    text: "Comfortable across several languages, from scripting tools in Python to object-oriented work in Java and C#.",
-    tags: ["Python", "Java", "C#", "SQL"],
+    text: "Comfortable across several languages, from Python tooling to Java, C/C++ and Dart.",
+    tags: ["Python", "Java", "C / C++", "Dart", "JavaScript", "MySQL"],
   },
   {
     title: "Web & Mobile",
     icon: MonitorSmartphone,
     lead: "Screens people use.",
-    text: "Front-ends in React and plain HTML/CSS/JS, and cross-platform mobile apps in Flutter with Firebase.",
-    tags: ["React", "HTML", "CSS", "JavaScript", "Flutter", "Firebase"],
+    text: "Front-ends in React and plain HTML/CSS/JS, cross-platform mobile apps in Flutter with Firebase, and backend basics like REST APIs, JWT and CORS.",
+    tags: ["React", "HTML", "CSS", "Node.js", "Flutter", "Firebase"],
   },
   {
-    title: "Project Management",
-    icon: Users,
-    lead: "Keeping teams on track.",
-    text: "Led the 5-person E-Pretest team as project manager and the 3D-ProbeCode capstone as project leader: planning timelines, splitting work and tracking progress.",
-    tags: ["Planning", "Teamwork", "Time management"],
+    title: "AI & Vision",
+    icon: Eye,
+    lead: "Teaching machines to see.",
+    text: "Image classification with CNNs in MATLAB, plus OpenCV and YOLOv8 for computer vision and object detection.",
+    tags: ["OpenCV", "YOLOv8", "CNN", "MATLAB"],
   },
-];
-
-export const stats = [
-  { label: "Public repositories", value: "—" },
-  { label: "Contributions this year", value: "—" },
-  { label: "Projects completed", value: "—" },
-  { label: "Most used language", value: "—" },
 ];
