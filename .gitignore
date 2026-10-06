@@ -4,3 +4,7 @@ out
 .env*
 *.log
 .DS_Store
+tsconfig.tsbuildinfo
+# Local build cache and private project notes
+tsconfig.tsbuildinfo
+project-data/
