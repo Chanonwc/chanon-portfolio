@@ -18,19 +18,21 @@
   --font-sans: var(--font-mukta), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-merriweather), ui-serif, Georgia, serif;
   --color-primary-500: var(--accent);
+  /* Same blue → violet → cyan as the shader background; used for highlights. */
+  --violet: #8b5cf6;
+  --cyan: #06b6d4;
+  --grad: linear-gradient(90deg, var(--accent), var(--violet), var(--cyan));
+  /* Line colour for borders and dividers in the light theme. */
+  --line: #0b0b0f;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* Dark theme background and the translucent top bar. */
+/* Dark theme background. */
 .dark body {
   background-color: var(--dark-bg);
-}
-
-.dark header.fixed {
-  background-color: rgba(0, 0, 0, 0.6);
 }
 
 ::selection {
@@ -91,12 +93,98 @@ html {
 .photo-frame {
   overflow: hidden;
   border-radius: 1.25rem;
-  border: 1px solid rgba(var(--accent-rgb), 0.45);
-  box-shadow: 6px 6px 0 0 var(--accent);
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, var(--accent), var(--violet), var(--cyan)) border-box;
+  box-shadow:
+    0 0 50px -12px rgba(139, 92, 246, 0.55),
+    0 0 80px -24px rgba(var(--accent-rgb), 0.7);
 }
 
 .dark .photo-frame {
-  border-color: rgba(var(--accent-rgb), 0.35);
+  background:
+    linear-gradient(#000, #000) padding-box,
+    linear-gradient(135deg, var(--accent), var(--violet), var(--cyan)) border-box;
+}
+
+/* Gradient text (active nav link). */
+.text-gradient {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Top bar: tinted glass with a faint gradient line along the bottom. */
+.nav-bar {
+  background: rgba(255, 255, 255, 0.7);
+}
+.dark .nav-bar {
+  background: rgba(5, 7, 15, 0.6);
+}
+.nav-bar::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), var(--violet), var(--cyan), transparent);
+  opacity: 0.45;
+}
+
+/* Clickable inline link: moving gradient text + underline, and an arrow that nudges to invite a click. */
+.link-fancy {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1em;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--accent), var(--violet), var(--cyan), var(--accent));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: grad-pan 4s linear infinite;
+}
+.link-fancy::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -3px 0;
+  height: 2px;
+  border-radius: 2px;
+  background: inherit;
+  background-clip: border-box;
+  transition: height 0.2s ease, box-shadow 0.2s ease;
+}
+.link-fancy svg {
+  color: var(--violet);
+  animation: nudge 2.4s ease-in-out infinite;
+}
+.link-fancy:hover::after,
+.link-fancy:focus-visible::after {
+  height: 3px;
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.7);
+}
+.link-fancy:hover svg {
+  animation: none;
+  transform: translate(3px, -3px);
+  transition: transform 0.2s ease;
+}
+@keyframes grad-pan {
+  to {
+    background-position: 300% 0;
+  }
+}
+@keyframes nudge {
+  0%, 70%, 100% {
+    transform: translate(0, 0);
+  }
+  80% {
+    transform: translate(3px, -3px);
+  }
+  90% {
+    transform: translate(0, 0);
+  }
 }
 
 .icon-badge {
@@ -109,6 +197,153 @@ html {
   border-radius: 0.5rem;
   background: var(--accent);
   color: #fff;
+}
+
+/* Skill chip with a brand logo (also used for the GitHub / link buttons on the project timeline). */
+.skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  background: rgb(249 250 251);
+  padding: 0.375rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  white-space: nowrap;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.dark .skill-chip {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+}
+.skill-chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+/* Frosted glass card (Skill section). */
+.glass-card {
+  overflow: hidden;
+  border-radius: 1.75rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.6);
+  padding: 1.75rem 0;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 50px -24px rgba(0, 0, 0, 0.18);
+}
+.dark .glass-card {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 20px 50px -24px rgba(0, 0, 0, 0.8);
+}
+
+/* Endless logo row: the track holds the list twice and slides by half its width. Edges fade out. */
+.marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.marquee-reverse {
+  animation-direction: reverse;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem 1.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: rgb(156 163 175);
+  transition: color 0.25s ease;
+}
+.marquee-item img {
+  filter: grayscale(1);
+  opacity: 0.55;
+  transition: filter 0.25s ease, opacity 0.25s ease, transform 0.25s ease;
+}
+.marquee-item:hover {
+  color: #000;
+}
+.dark .marquee-item {
+  color: rgb(115 115 115);
+}
+.dark .marquee-item:hover {
+  color: #fff;
+}
+.marquee-item:hover img {
+  filter: none;
+  opacity: 1;
+  transform: scale(1.12);
+}
+
+/* Hover preview card that follows the cursor over a timeline item. */
+.preview-card {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 50;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.35), 5px 5px 0 0 var(--accent);
+  backdrop-filter: blur(12px);
+  pointer-events: none;
+  opacity: 0;
+  scale: 0.92;
+  transition: opacity 0.2s ease, scale 0.2s ease;
+}
+.preview-card.is-active {
+  opacity: 1;
+  scale: 1;
+}
+.dark .preview-card {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(12, 12, 14, 0.92);
+  box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.9), 5px 5px 0 0 var(--accent);
+}
+
+/* Icon circle sitting on the project timeline's vertical line. */
+.timeline-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  translate: -50% 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--accent);
+}
+.dark .timeline-dot {
+  border-color: rgba(var(--accent-rgb), 0.45);
+  background: var(--dark-bg);
+}
+li:hover > .timeline-dot {
+  background: var(--accent);
+  color: #fff;
+}
+.timeline-dot {
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .pill,
@@ -173,6 +408,39 @@ html {
   animation: fade-in 0.6s ease both;
 }
 
+/* ---------- Preloader ---------- */
+
+/* While loading: no scrolling, and the hero's fade-ins wait until the cover lifts. */
+.is-loading body {
+  overflow: hidden;
+}
+.is-loading .fade-in {
+  animation-play-state: paused;
+}
+
+.intro-seen .preloader {
+  display: none;
+}
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 30% 20%, #e8edfc, #f8f9fd 60%);
+  color: #0b0b0f;
+  transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.dark .preloader {
+  background: radial-gradient(ellipse at 30% 20%, #0b1430, #000 60%);
+  color: #fff;
+}
+.preloader.is-leaving {
+  transform: translateY(-100%);
+}
+
 /* Scroll reveal: a section gets .is-visible the first time it enters the viewport. */
 .reveal {
   opacity: 0;
@@ -185,22 +453,140 @@ html {
   translate: 0 0;
 }
 
-.section-line {
-  scale: 0 1;
-  transform-origin: left;
-  transition: scale 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+/* Contact widget: floating button + mail composer, in the site's accent colour. */
+.contact-fab {
+  position: relative;
+  display: flex;
+  height: 3.5rem;
+  width: 3.5rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--accent), var(--violet));
+  color: #fff;
+  box-shadow:
+    0 10px 30px -8px rgba(139, 92, 246, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.contact-fab:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow:
+    0 14px 38px -6px rgba(139, 92, 246, 0.85),
+    0 0 24px -4px rgba(6, 182, 212, 0.5);
+}
+.contact-hint {
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  padding: 0.5rem 1rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  box-shadow: 0 6px 20px -8px rgba(0, 0, 0, 0.25);
+}
+.dark .contact-hint {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #111;
 }
 
-.is-visible .section-line {
-  scale: 1 1;
+.contact-panel {
+  --panel-line: var(--line);
+  display: flex;
+  flex-direction: column;
+  width: min(26rem, calc(100vw - 2.5rem));
+  max-height: calc(100vh - 8rem);
+  overflow: hidden;
+  border-radius: 0.875rem;
+  border: 1px solid var(--panel-line);
+  background: #fff;
+  box-shadow: 0 24px 60px -16px rgba(0, 0, 0, 0.35), 6px 6px 0 0 var(--accent);
+  transform-origin: bottom right;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px) scale(0.96);
+}
+.contact-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  /* Become visible instantly when opening so the first field can take focus. */
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s;
+}
+.dark .contact-panel {
+  --panel-line: rgba(255, 255, 255, 0.1);
+  background: #0b0b0c;
+  box-shadow: 0 24px 60px -16px rgba(0, 0, 0, 0.8), 6px 6px 0 0 var(--accent);
+}
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--panel-line);
+  padding: 0.625rem 1rem;
+}
+.contact-label {
+  width: 4.25rem;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  color: rgb(107 114 128);
+}
+.contact-input {
+  width: 100%;
+  background: transparent;
+  font-size: 0.9375rem;
+  outline: none;
+}
+.contact-input::placeholder {
+  color: rgb(156 163 175);
+}
+.dark .contact-input::placeholder {
+  color: rgb(107 114 128);
+}
+.contact-send,
+.contact-ghost {
+  display: inline-flex;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 0.5rem;
+  padding: 0.375rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.contact-send {
+  background: var(--accent);
+  color: #fff;
+}
+.contact-send:hover {
+  background: color-mix(in srgb, var(--accent) 85%, black);
+}
+.contact-ghost {
+  border: 1px solid var(--panel-line);
+  font-weight: 500;
+}
+.contact-ghost:hover {
+  border-color: var(--accent);
+}
+
+/* Small pill label above each section heading. */
+.section-label {
+  border-radius: 0.5rem;
+  background: rgb(17 24 39);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+}
+.dark .section-label {
+  background: #fff;
+  color: #000;
 }
 
 /* With reduced motion, sections still fade in but nothing slides. */
 @media (prefers-reduced-motion: reduce) {
-  .fade-in {
-    animation: none;
-  }
-
   .reveal {
     translate: none;
   }

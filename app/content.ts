@@ -6,13 +6,10 @@ import {
   CircuitBoard,
   ClipboardCheck,
   Code,
-  Cpu,
   Crosshair,
-  Eye,
   FileUp,
   GraduationCap,
   type LucideIcon,
-  MonitorSmartphone,
   Route,
   Server,
   SlidersHorizontal,
@@ -34,8 +31,8 @@ export const profile = {
 export const socials = {
   github: "https://github.com/Chanonwc",
   linkedin: "#",
-  instagram: "#",
-  email: "mailto:wc.chanon@gmail.com",
+  instagram: "https://www.instagram.com/chanon.wc/",
+  email: "mailto:wc.chanon@gmail.com"
 };
 
 // GitHub username used by the Stats section.
@@ -61,10 +58,16 @@ export type Project = {
   summary: string;
   bullets: string[];
   stack: string[];
+  // Photos for the hover preview on the timeline — put files in /public/projects/<slug>/
+  // and list them here, e.g. ["/projects/3d-probecode/app.png"]. Several photos swap automatically.
+  images?: string[];
   // Everything below is optional and only shown on the project's detail page.
   description?: string;
   detailStack?: string[];
+  // GitHub repo — shown as a "GitHub" button on the timeline.
   github?: string;
+  // Extra buttons on the timeline, e.g. { label: "Demo", href: "https://..." }.
+  links?: { label: string; href: string }[];
   stats?: { value: string; label: string }[];
   steps?: { icon: LucideIcon; title: string; text: string }[];
   highlights?: { title: string; text: string }[];
@@ -100,6 +103,7 @@ export const projects: Project[] = [
       "G-code (GRBL)",
     ],
     github: "https://github.com/Mold-Inspection/3D-ProbeCode",
+    images: ["/projects/3d-probecode/photo-1.jpg"],
     stats: [
       { value: "120", label: "Commits" },
       { value: "54", label: "Pull requests merged" },
@@ -278,6 +282,11 @@ export const projects: Project[] = [
   },
 ];
 
+// Projects for the timeline, newest first — sorted by the first year in `date`
+// ("Coming soon" / no year goes on top). Projects from the same year keep the order above.
+const startYear = (date: string) => Number(date.match(/\d{4}/)?.[0] ?? 9999);
+export const projectsByDate = [...projects].sort((a, b) => startYear(b.date) - startYear(a.date));
+
 // Not shown on the page right now (the Thoughts section was dropped from the design).
 // Kept here so it can be brought back later.
 export const thoughts = [
@@ -305,35 +314,37 @@ export const thoughts = [
 ];
 
 export const usesIntro =
-  "From microcontroller boards to web apps and vision models: the tools I reach for when building things end to end.";
+  "From microcontroller boards to web apps, cloud and vision models: the technologies I use to build things end to end.";
 
-export const uses = [
-  {
-    title: "Embedded & IoT",
-    icon: Cpu,
-    lead: "Hardware that reacts.",
-    text: "Microcontroller and hardware work on ESP32, Arduino and STM32, from a custom I2C I/O expander PCB to a hand-wound linear power supply.",
-    tags: ["ESP32", "Arduino", "STM32", "C / C++"],
-  },
-  {
-    title: "Programming",
-    icon: Code,
-    lead: "The fundamentals.",
-    text: "Comfortable across several languages, from Python tooling to Java, C/C++ and Dart.",
-    tags: ["Python", "Java", "C / C++", "Dart", "JavaScript", "MySQL"],
-  },
-  {
-    title: "Web & Mobile",
-    icon: MonitorSmartphone,
-    lead: "Screens people use.",
-    text: "Front-ends in React and plain HTML/CSS/JS, cross-platform mobile apps in Flutter with Firebase, and backend basics like REST APIs, JWT and CORS.",
-    tags: ["React", "HTML", "CSS", "Node.js", "Flutter", "Firebase"],
-  },
-  {
-    title: "AI & Vision",
-    icon: Eye,
-    lead: "Teaching machines to see.",
-    text: "Image classification with CNNs in MATLAB, plus OpenCV and YOLOv8 for computer vision and object detection.",
-    tags: ["OpenCV", "YOLOv8", "CNN", "MATLAB"],
-  },
+// Skills shown in the scrolling logo rows of the Skill section — one inner list per row.
+// Rows scroll in alternating directions.
+export const skillRows = [
+  // Languages, web & mobile
+  ["Python", "C / C++", "Java", "JavaScript", "Dart", "React", "HTML", "CSS", "Node.js", "Flutter"],
+  // Cloud & data, embedded, AI & vision
+  ["Microsoft Azure", "Firebase", "MySQL", "ESP32", "Arduino", "STM32", "OpenCV", "YOLOv8", "MATLAB"],
 ];
+
+// Logo for each skill — files live in /public/skills. Every skill in skillRows needs an entry here.
+// Add a new skill: drop an SVG in public/skills and map the name to it.
+export const skillLogos: Record<string, string> = {
+  ESP32: "/skills/espressif.svg",
+  Arduino: "/skills/arduino.svg",
+  STM32: "/skills/stmicroelectronics.svg",
+  "C / C++": "/skills/cplusplus.svg",
+  Python: "/skills/python.svg",
+  Java: "/skills/java.svg",
+  Dart: "/skills/dart.svg",
+  JavaScript: "/skills/javascript.svg",
+  MySQL: "/skills/mysql.svg",
+  React: "/skills/react.svg",
+  HTML: "/skills/html5.svg",
+  CSS: "/skills/css3.svg",
+  "Node.js": "/skills/nodejs.svg",
+  Flutter: "/skills/flutter.svg",
+  Firebase: "/skills/firebase.svg",
+  OpenCV: "/skills/opencv.svg",
+  YOLOv8: "/skills/ultralytics.svg",
+  MATLAB: "/skills/matlab.svg",
+  "Microsoft Azure": "/skills/azure.svg",
+};

@@ -5,11 +5,17 @@ import { useEffect, useRef, useState } from "react";
 // A page section that reveals itself the first time it scrolls into view.
 export default function Section({
   id,
+  label,
   title,
+  intro,
   children,
 }: {
   id: string;
+  // Small pill above the heading.
+  label: string;
   title: string;
+  // Optional centered paragraph under the heading.
+  intro?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLElement>(null);
@@ -37,10 +43,14 @@ export default function Section({
       id={id}
       className={`flex scroll-mt-12 flex-col gap-4 px-8 py-20 md:px-18 ${visible ? "is-visible" : ""}`}
     >
-      <div className="mb-8 flex items-center gap-2 text-primary-500">
-        <span className="font-bold">/{id}</span>
-        <div className="section-line mx-1 flex-1 border-b border-primary-500" />
-        <h2 className="reveal font-serif text-lg text-black md:text-4xl dark:text-white">{title}</h2>
+      <div className="mb-10 flex flex-col items-center gap-4 text-center">
+        <span className="section-label reveal">{label}</span>
+        <h2 className="reveal text-3xl font-extrabold tracking-tight md:text-5xl">{title}</h2>
+        {intro && (
+          <p className="reveal max-w-2xl text-lg leading-7 text-gray-500 dark:text-gray-400">
+            {intro}
+          </p>
+        )}
       </div>
       {children}
     </section>

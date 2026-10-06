@@ -22,24 +22,24 @@ export default function TopNav() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-30 flex items-center justify-between bg-white/60 px-4 py-2 font-serif text-sm backdrop-blur-sm md:px-8 dark:bg-black/60">
-      <a href="#home" className="hidden font-bold sm:block">
+    <header className="nav-bar fixed inset-x-0 top-0 z-30 flex h-16 items-center justify-between px-5 font-serif text-base backdrop-blur-md md:h-[72px] md:px-12">
+      <a href="#home" className="hidden text-lg font-bold md:text-xl sm:block">
         Chanon Wichai
       </a>
-      <div className="flex flex-1 items-center justify-between gap-3 sm:flex-none sm:justify-end sm:gap-5">
-        <nav className="flex gap-3 sm:gap-5">
+      <div className="flex flex-1 items-center justify-between gap-3 sm:flex-none sm:justify-end sm:gap-8">
+        <nav className="flex gap-5 sm:gap-8">
           {sections.map(({ id, label }) => (
             <a
               key={id}
               href={`#${id}`}
               aria-current={active === id ? "true" : undefined}
               className={`relative py-1 transition-colors hover:text-primary-500 ${
-                active === id ? "text-primary-500" : ""
+                active === id ? "text-gradient" : ""
               }`}
             >
-              /{label}
+              {label}
               <span
-                className={`absolute inset-x-0 bottom-0 h-0.5 origin-left bg-primary-500 transition-transform duration-300 ${
+                className={`absolute inset-x-0 bottom-0 h-0.5 origin-left rounded-full bg-[image:var(--grad)] transition-transform duration-300 ${
                   active === id ? "scale-x-100" : "scale-x-0"
                 }`}
               />

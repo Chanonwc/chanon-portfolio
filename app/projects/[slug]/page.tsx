@@ -48,7 +48,7 @@ export default async function ProjectPage({ params }: Props) {
       <main className="relative z-10 mx-auto flex min-h-svh w-full max-w-5xl flex-col gap-12 border-x border-gray-200 px-8 pb-16 pt-24 md:px-18 dark:border-gray-300/20">
         {/* OVERVIEW */}
         <section className="fade-in grid gap-8 lg:grid-cols-[1fr_20rem]">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4">/
             <span className="icon-badge">
               <Icon size={20} />
             </span>
