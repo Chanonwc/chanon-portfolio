@@ -265,6 +265,7 @@ export const projects: Project[] = [
       "Interfaces digital inputs and outputs",
     ],
     stack: ["PCF8574", "I2C", "PCB design"],
+    images: ["/projects/i2c-io-expander/01-pcb-design.jpg", "/projects/i2c-io-expander/02-drilling.jpg"],
   },
   {
     slug: "flutter-mobile-app",
@@ -301,6 +302,7 @@ export const projects: Project[] = [
       "Hand-wound main power transformer",
     ],
     stack: ["Analog electronics", "Power supply", "Transformer winding"],
+    images: ["/projects/linear-dc-power-supply/01-inside.jpg"],
   },
 ];
 
