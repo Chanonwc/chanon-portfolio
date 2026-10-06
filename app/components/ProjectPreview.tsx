@@ -115,7 +115,7 @@ export default function ProjectPreview({
                     fill
                     sizes={`${CARD_W}px`}
                     loading="eager"
-                    className={`object-cover transition-opacity duration-700 ${i === slide ? "opacity-100" : "opacity-0"}`}
+                    className={`object-cover object-top transition-opacity duration-700 ${i === slide ? "opacity-100" : "opacity-0"}`}
                   />
                 ))
               ) : (
