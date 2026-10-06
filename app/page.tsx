@@ -1,15 +1,18 @@
 import Image from "next/image";
-import { AtSign, Github, Instagram, Linkedin } from "lucide-react";
+import { ArrowUpRight, AtSign, Github, Instagram, Linkedin } from "lucide-react";
+import ContactWidget from "./components/ContactWidget";
 import ContributionGraph from "./components/ContributionGraph";
-import ProjectCard from "./components/ProjectCard";
+import ProjectTimeline from "./components/ProjectTimeline";
 import Section from "./components/Section";
+import SkillMarquee from "./components/SkillMarquee";
 import TopNav from "./components/TopNav";
 import {
   githubUsername,
   profile,
-  projects,
+  projectsByDate,
+  skillLogos,
+  skillRows,
   socials,
-  uses,
   usesIntro,
 } from "./content";
 import { getGithubStats } from "./lib/github";
@@ -41,7 +44,7 @@ export default async function Home() {
       label: "Contributions this year",
       value: github?.days.length ? github.totalContributions.toLocaleString("en-US") : "—",
     },
-    { label: "Projects completed", value: String(projects.length) },
+    { label: "Projects completed", value: String(projectsByDate.length) },
     { label: "Most used language", value: github?.topLanguage ?? "—" },
   ];
 
@@ -52,28 +55,29 @@ export default async function Home() {
       <main className="relative z-10 w-full">
         {/* HOME */}
         <section id="home" className="relative min-h-svh font-serif">
-          <div className="fade-in absolute top-[20%] flex max-w-5xl flex-col justify-center space-y-4 px-8 md:top-[40%] md:px-24 lg:ml-14">
-            <h1 className="text-2xl md:mr-4 md:text-4xl">
+          <div className="absolute top-[18%] flex max-w-5xl flex-col justify-center space-y-4 px-8 md:top-[34%] md:px-24 lg:ml-14">
+            <h1 className="fade-in text-2xl md:mr-4 md:text-4xl" style={{ animationDelay: "120ms" }}>
               Welcome to my <span className="font-bold">personal portfolio — </span> a
-              place where I <span className="border-b border-b-primary-500 italic">build</span>,
-              break and learn things.
+              place where I{" "}
+              <span className="italic">build</span>, break and learn things.
             </h1>
 
-            <p className="text-justify text-base">
+            <p className="fade-in text-justify text-base" style={{ animationDelay: "260ms" }}>
               I&apos;m {profile.name} — {profile.role}. {profile.intro} Right now, I&apos;m
               studying at{" "}
               <a
                 href={profile.current.href}
-                className="underline-magical"
+                className="link-fancy"
                 target="_blank"
                 rel="noreferrer"
               >
                 {profile.current.label}
+                <ArrowUpRight size={16} strokeWidth={2.5} aria-hidden />
               </a>
               .
             </p>
 
-            <div className="text-sm">
+            <div className="fade-in text-sm" style={{ animationDelay: "400ms" }}>
               <p>More about me:</p>
               <div className="-ml-2 flex">
                 {socialLinks.map(({ label, href, icon: Icon }) => (
@@ -111,63 +115,33 @@ export default async function Home() {
           </div>
         </section>
 
-        <div className="mx-auto w-full max-w-5xl border-x border-gray-200 dark:border-gray-300/20">
+        <div className="mx-auto w-full max-w-5xl">
           {/* PROJECTS */}
-          <Section id="projects" title="Projects">
-            <p className="reveal text-lg leading-7 text-gray-500 dark:text-gray-400">
-              Here are some of my selected projects worth sharing.
-            </p>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {projects.map((project, i) => (
-                <ProjectCard
-                  key={project.slug}
-                  project={project}
-                  featured={i === 0}
-                  style={delay(i)}
-                />
-              ))}
-            </div>
+          <Section
+            id="projects"
+            label="Projects"
+            title="I like building things"
+            intro="From capstone work to coursework and workshops, here is what I've built — newest first."
+          >
+            <ProjectTimeline projects={projectsByDate} />
           </Section>
 
           {/* SKILL */}
-          <Section id="skill" title="Skill">
-            <p className="reveal text-lg leading-7 text-gray-500 dark:text-gray-400">
-              {usesIntro}
-            </p>
-            <div className="grid gap-6 md:grid-cols-5">
-              {uses.map((group, i) => (
-                <div
-                  key={group.title}
-                  className={`card reveal flex flex-col gap-3 ${
-                    i % 4 === 0 || i % 4 === 3 ? "md:col-span-3" : "md:col-span-2"
-                  } ${i % 4 === 1 ? "card-tinted" : ""}`}
-                  style={delay(i)}
-                >
-                  <span className="icon-badge rounded-full!">
-                    <group.icon size={18} />
-                  </span>
-                  <h3 className="font-serif text-2xl font-bold">{group.title}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-bold text-black dark:text-white">{group.lead}</span>{" "}
-                    {group.text}
-                  </p>
-                  <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
-                    {group.tags.map((tag) => (
-                      <span key={tag} className="pill">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+          <Section id="skill" label="Skills" title="My tech stack" intro={usesIntro}>
+            <SkillMarquee
+              label="Languages, frameworks, hardware and cloud I build with"
+              rows={skillRows}
+              logos={skillLogos}
+            />
           </Section>
 
           {/* STATS */}
-          <Section id="stats" title="Stats">
-            <p className="reveal mb-5 text-lg leading-7 text-gray-500 dark:text-gray-400">
-              Here are some personal stats gathered from different sources.
-            </p>
+          <Section
+            id="stats"
+            label="Stats"
+            title="By the numbers"
+            intro="Here are some personal stats gathered from different sources."
+          >
 
             <div className="reveal space-y-4" style={delay(0)}>
               <div>
@@ -195,7 +169,7 @@ export default async function Home() {
                 {overview.map((stat) => (
                   <div
                     key={stat.label}
-                    className="rounded-md border-b border-gray-200 px-3 py-2 dark:border-gray-800"
+                    className="rounded-md border-b border-[var(--line)] px-3 py-2 dark:border-gray-800"
                   >
                     <p className="font-bold">{stat.label}</p>
                     <span className="text-gray-500 dark:text-gray-400">{stat.value}</span>
@@ -210,6 +184,7 @@ export default async function Home() {
           © 2026 {profile.name}
         </footer>
       </main>
+      <ContactWidget />
     </>
   );
 }
