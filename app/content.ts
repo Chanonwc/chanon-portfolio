@@ -82,7 +82,7 @@ export const projects: Project[] = [
     tagline: "Capstone project · CMM path planner",
     badges: ["Capstone", "Lead Developer"],
     role: "Lead Developer",
-    date: "2026 – Present",
+    date: "Apr 2026 – Present",
     summary:
       "A CMM (Coordinate Measuring Machine) path planner in Python, built as a duo: it reads a STEP model, detects holes, pockets and slots, generates a GRBL probing program, then imports the machine log to measure each hole's diameter, offset and roundness against the CAD.",
     bullets: [
@@ -172,7 +172,7 @@ export const projects: Project[] = [
     tagline: "AI pre-test platform for KMUTNB students · team project",
     badges: ["Software Tester"],
     role: "Software Tester",
-    date: "2025",
+    date: "Mar 2026",
     summary:
       "Designed UAT scenarios and ran hands-on functional testing for an AI pre-test platform that turns lecture PDFs into adaptive multiple-choice exams with DeepSeek, then gives each student a GAP analysis of their weak topics.",
     bullets: [
@@ -197,7 +197,7 @@ export const projects: Project[] = [
     tagline: "Discord bot for Cisco network automation · solo course project",
     badges: ["Course Project", "Solo"],
     role: "Developer",
-    date: "2025",
+    date: "Mar 2026",
     summary:
       "Built a Discord bot that turns plain-language requests into Cisco router commands with Gemini AI, then runs them on real hardware in the university lab over GlobalProtect VPN — only after an admin approves, with an automatic config backup and audit log for every change.",
     bullets: [
@@ -220,7 +220,7 @@ export const projects: Project[] = [
     tagline: "Industry backend workshop · 3 sessions",
     badges: ["Workshop"],
     role: "Participant",
-    date: "2025",
+    date: "Mar 2026",
     summary:
       "Built a user-management REST API in ASP.NET Core across a 3-session industry workshop, following the instructor step by step — with JWT login, refresh tokens and logout that revokes the session — then tested every endpoint in Postman and Swagger.",
     bullets: [
@@ -237,7 +237,7 @@ export const projects: Project[] = [
     tagline: "Flower classifier CNN in MATLAB · coursework project",
     badges: ["Coursework"],
     role: "Developer",
-    date: "2025",
+    date: "Mar 2025",
     summary:
       "Trained a Convolutional Neural Network in MATLAB on ~10,900 images to recognise 11 kinds of flowers, reaching 90.61% validation accuracy, and built a desktop app that classifies any photo with a confidence score.",
     bullets: [
@@ -274,7 +274,7 @@ export const projects: Project[] = [
     tagline: "Football field booking app · Flutter + Firebase",
     badges: ["Developer"],
     role: "Developer",
-    date: "2025",
+    date: "Dec 2025 – Mar 2026",
     summary:
       "Built a cross-platform Flutter app for booking football fields: Firebase sign-in, live field list, bookings that block overlapping time slots, an admin view to confirm bookings and track revenue, a booking calendar and a team-merch store with cart.",
     bullets: [
@@ -306,10 +306,16 @@ export const projects: Project[] = [
   },
 ];
 
-// Projects for the timeline, newest first — sorted by the first year in `date`
-// ("Coming soon" / no year goes on top). Projects from the same year keep the order above.
-const startYear = (date: string) => Number(date.match(/\d{4}/)?.[0] ?? 9999);
-export const projectsByDate = [...projects].sort((a, b) => startYear(b.date) - startYear(a.date));
+// Projects for the timeline, newest first — sorted by the start date in `date`, e.g. "Mar 2026" or
+// "Dec 2025 – Mar 2026" (a month is optional; no year at all goes on top). Ties keep the order above.
+const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+const startKey = (date: string) => {
+  const m = date.match(/(?:([A-Za-z]{3})[a-z]*\s+)?(\d{4})/);
+  if (!m) return Infinity;
+  const month = m[1] ? MONTHS.indexOf(m[1].toLowerCase()) : -1;
+  return Number(m[2]) * 12 + Math.max(month, 0);
+};
+export const projectsByDate = [...projects].sort((a, b) => startKey(b.date) - startKey(a.date));
 
 // Not shown on the page right now (the Thoughts section was dropped from the design).
 // Kept here so it can be brought back later.
